@@ -50,7 +50,7 @@ Argument definitions
 Running the tests
 -----------------
 
-    See `Contributing https://github.com/strets123/grapper/blob/master/CONTRIBUTING.rst`_
+    See `Contributing <https://github.com/strets123/grapper/blob/master/CONTRIBUTING.rst>`_
 
 
 Expected file formats are as follows
