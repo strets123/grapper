@@ -6,7 +6,7 @@ Grapper
 .. image:: https://img.shields.io/travis/strets123/grapper.svg
         :target: https://travis-ci.org/strets123/grapper
 
-
+.. image:: https://coveralls.io/repos/github/strets123/grapper/badge.svg?branch=master :target: https://coveralls.io/github/strets123/grapper?branch=master
 
 A simple reference genome re-mapper
 
