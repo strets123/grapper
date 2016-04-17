@@ -12,6 +12,7 @@ import unittest
 from grapper import grapper
 import os
 import json
+import multiprocessing
 
 OUTPUT_FILE = "test_output.json"
 
@@ -31,17 +32,18 @@ class TestGrapper(unittest.TestCase):
             pass
 
     def test_file_writer(self):
-        """Given a writer process and writer writer queue,
+        """Given a writer queue,
         When I send JSON strings to the queue,
-        Then a valid JSON list will be written to the output file specified"""
-        writer_process, writer_queue = grapper.get_writer_process_and_queue(
-            OUTPUT_FILE)
-        writer_process.start()
+        And I send the queue to the file writer
+        Then a valid JSON list will be written 
+        to the output file specified"""
+        
+        writer_queue = multiprocessing.Queue()
         writer_queue.put('1')
         writer_queue.put('"1"')
         writer_queue.put('{"1": 1 }')
         writer_queue.put(grapper.STOP_TOKEN)
-        writer_process.join()
+        grapper.file_writer(OUTPUT_FILE, writer_queue, grapper.STOP_TOKEN)
         with open(OUTPUT_FILE, 'r') as output:
             jsondata = json.load(output)
             dict_list = [coord for coord in jsondata]
