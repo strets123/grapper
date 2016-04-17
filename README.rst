@@ -21,7 +21,7 @@ A simple reference genome re-mapper
 Features
 --------
 
-* TODO
+* Given a file with a JSON list of chomosome alignments and a second file with coordinates for remapping, write an output
 
 Credits
 ---------
