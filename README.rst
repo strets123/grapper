@@ -21,7 +21,18 @@ A simple reference genome re-mapper
 Features
 --------
 
-* Given a file with a JSON list of chomosome alignments and a second file with coordinates for remapping, write an output
+* Given a file with a JSON list of chomosome alignments and a second file with coordinates for remapping, write an output file
+
+* Usage:
+
+   grapper.py [-h] alignfile coordsfile output
+
+    positional arguments:
+        alignfile   Path to the alignment JSON file
+        coordsfile  Path to the coordinates JSON file
+        output      Path to the desired output file
+
+
 
 Credits
 ---------

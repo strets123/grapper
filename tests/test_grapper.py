@@ -13,7 +13,6 @@ import unittest
 from grapper import grapper
 import os
 import json
-import time
 import multiprocessing
 
 OUTPUT_FILE = "test_output.json"
@@ -45,7 +44,7 @@ class TestGrapper(unittest.TestCase):
         writer_queue.put('"1"')
         writer_queue.put('{"1": 1 }')
         writer_queue.put(grapper.STOP_TOKEN)
-        time.sleep(1)
+        writer_process.join()
         with open(OUTPUT_FILE, 'r') as output:
             jsondata = json.load(output)
             dict_list = [coord for coord in jsondata]
@@ -96,8 +95,7 @@ class TestGrapper(unittest.TestCase):
                     }
         new_mapping = grapper.remap_genome_coordinate(coordinate, align_dict)
         self.assertEqual(new_mapping, None)
-
-        coordinate = { "chromosome": "1", "position": 200, "reference": "A" }
+        coordinate = { "chromosome": "1", "position": 201, "reference": "A" }
         align_dict = {
                         "1": 
                                 {   "source": { "start": 100, "chromosome": "1"}, 
@@ -180,7 +178,6 @@ class TestGrapper(unittest.TestCase):
 
         grapper.handle_command(alignfile, coordsfile, OUTPUT_FILE)
         #Wait for file to be fully flushed to the disk
-        time.sleep(1)
         with open(OUTPUT_FILE, 'r') as output:
             target_coords = json.load(output)
             dict_list = [coord for coord in target_coords]
@@ -213,7 +210,7 @@ class TestGrapper(unittest.TestCase):
 
          { "chromosome": "1", "position": 35, "reference": "A" },
 
-         { "chromosome": "1", "position": 200, "reference": "A" },
+         { "chromosome": "1", "position": 201, "reference": "A" },
 
          { "chromosome": "12", "position": 150, "reference": "A" }
 
@@ -239,7 +236,6 @@ class TestGrapper(unittest.TestCase):
 
         grapper.handle_command(alignfile, coordsfile, OUTPUT_FILE)
         #Wait for file to be fully flushed to the disk
-        time.sleep(1)
         with open(OUTPUT_FILE, 'r') as output:
             target_coords = json.load(output)
             dict_list = [coord for coord in target_coords]
