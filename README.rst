@@ -47,6 +47,10 @@ Argument definitions
     output      Path to the desired output file
 
 
+Running the tests
+-----------------
+
+    See `Contributing https://github.com/strets123/grapper/blob/master/CONTRIBUTING.rst`_
 
 
 Expected file formats are as follows
@@ -86,9 +90,11 @@ Tests have been added to demonstrate the functionality and specifically to show 
 Future Work
 -----------
 
-A further improvement can be envisioned whereby the reading of the file is done in multiple processes too. This could be done by reading alternate JSON objects in different subprocesses.
+A further improvement can be envisioned whereby the reading of the file is done in multiple processes too. This could be done by reading alternate JSON objects in different subprocesses. 
 
-It may also be faster
+It may also be faster to change the data structure of the alignment JSON to a dictionary of tuples.
+
+There is currently an error if running tox locally if the coveralls repo key environment variable is not set but this does not affect running the tests.
 
 
 Credits
