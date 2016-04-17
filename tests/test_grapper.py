@@ -14,6 +14,7 @@ from grapper import grapper
 import os
 import json
 import time
+import multiprocessing
 
 OUTPUT_FILE = "test_output.json"
 
@@ -32,6 +33,26 @@ class TestGrapper(unittest.TestCase):
             os.remove(OUTPUT_FILE)
         except OSError:
             pass
+
+
+    def test_file_writer(self):
+        """Given a writer process and writer writer queue,
+        When I send JSON strings to the queue,
+        Then a valid JSON list will be written to the output file specified"""
+        writer_process, writer_queue = grapper.get_writer_process_and_queue(OUTPUT_FILE)
+        writer_process.start()
+        writer_queue.put('1')
+        writer_queue.put('"1"')
+        writer_queue.put('{"1": 1 }')
+        writer_queue.put(grapper.STOP_TOKEN)
+        time.sleep(1)
+        with open(OUTPUT_FILE, 'r') as output:
+            jsondata = json.load(output)
+            dict_list = [coord for coord in jsondata]
+            self.assertEqual(dict_list, [1,"1",{"1": 1 }])
+
+
+
 
     def test_remap_genome_coordinate(self):
         """Given a valid coordinate on the old reference genome,
