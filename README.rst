@@ -92,7 +92,12 @@ Future Work
 
 A further improvement can be envisioned whereby the reading of the file is done in multiple processes too. This could be done by reading alternate JSON objects in different subprocesses. 
 
-It may also be faster to change the data structure of the alignment JSON to a dictionary of tuples.
+Furthermore, we currently work with the whole of the required data from the alignment file in memory. Clearly if the alignment file is truly as big as the coordinates file this is not going to work. In order to reduce memory use, a dictionary of tuples has been used.
+
+If both of the files were very large they could be ordered by a mergesort algorithm and then processed side by side, again by an algorithm similar to mergesort.
+
+Errors
+------
 
 There is currently an error if running tox locally if the coveralls repo key environment variable is not set but this does not affect running the tests.
 

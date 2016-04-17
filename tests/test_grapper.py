@@ -56,16 +56,8 @@ class TestGrapper(unittest.TestCase):
         Then I gent back the new coordinate"""
         coordinate = {"chromosome": "1", "position": 150, "reference": "A"}
         align_dict = {
-            "1":
-            {"source": {"start": 100, "chromosome": "1"},
-             "length": 100,
-             "target": {"start": 300, "chromosome": "2"}
-             },
-            "2":
-            {"source": {"start": 300, "chromosome": "2"},
-             "length": 200,
-             "target": {"start": 20, "chromosome": "7"}
-             }
+            "1":(100,100,300,"2"),
+            "2":(300,200,20,"7")  
         }
         new_mapping = grapper.remap_genome_coordinate(coordinate, align_dict)
         self.assertEqual(
@@ -79,31 +71,15 @@ class TestGrapper(unittest.TestCase):
         Then I gent back None"""
         coordinate = {"chromosome": "1", "position": 35, "reference": "A"}
         align_dict = {
-            "1":
-            {"source": {"start": 100, "chromosome": "1"},
-             "length": 100,
-             "target": {"start": 300, "chromosome": "2"}
-             },
-            "2":
-            {"source": {"start": 300, "chromosome": "2"},
-             "length": 200,
-             "target": {"start": 20, "chromosome": "7"}
-             }
+            "1":(100,100,300,"2"),
+            "2":(300,200,20,"7")
         }
         new_mapping = grapper.remap_genome_coordinate(coordinate, align_dict)
         self.assertEqual(new_mapping, None)
         coordinate = {"chromosome": "1", "position": 201, "reference": "A"}
         align_dict = {
-            "1":
-            {"source": {"start": 100, "chromosome": "1"},
-             "length": 100,
-             "target": {"start": 300, "chromosome": "2"}
-             },
-            "2":
-            {"source": {"start": 300, "chromosome": "2"},
-             "length": 200,
-             "target": {"start": 20, "chromosome": "7"}
-             }
+            "1":(100,100,300,"2"),
+            "2":(300,200,20,"7")
         }
         new_mapping = grapper.remap_genome_coordinate(coordinate, align_dict)
         self.assertEqual(new_mapping, None)
@@ -116,16 +92,8 @@ class TestGrapper(unittest.TestCase):
 
         coordinate = {"chromosome": "12", "position": 150, "reference": "A"}
         align_dict = {
-            "1":
-            {"source": {"start": 100, "chromosome": "1"},
-             "length": 100,
-             "target": {"start": 300, "chromosome": "2"}
-             },
-            "2":
-            {"source": {"start": 300, "chromosome": "2"},
-             "length": 200,
-             "target": {"start": 20, "chromosome": "7"}
-             }
+            "1":(100,100,300, "2"),
+            "2":(300,200,20, "7")
         }
         new_mapping = grapper.remap_genome_coordinate(coordinate, align_dict)
         self.assertEqual(new_mapping, None)

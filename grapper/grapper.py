@@ -35,13 +35,15 @@ def remap_genome_coordinate(coord, align_dict):
     original_chromosome = coord["chromosome"]
     chromosome_mapping = align_dict.get(original_chromosome, None)
     if chromosome_mapping is not None:
-        source_start_point = chromosome_mapping["source"]["start"]
+        (source_start_point, 
+         length, 
+         new_start_point, 
+         new_chromosome) = chromosome_mapping
+
         bases_from_start = coord["position"] - source_start_point
-        within_range = bases_from_start <= chromosome_mapping["length"]
+        within_range = bases_from_start <= length
         if bases_from_start >= 0 and within_range:
             # The base from the coordinate is within range
-            new_start_point = chromosome_mapping["target"]["start"]
-            new_chromosome = chromosome_mapping["target"]["chromosome"]
             coord["chromosome"] = new_chromosome
             coord["position"] = new_start_point + bases_from_start
             return coord
@@ -57,7 +59,11 @@ def remap_reference_genome(alignment_file_path,
     the source genome coordinates to a new reference genome"""
     with open(alignment_file_path, 'r') as align:
         alignments = ijson.items(align, 'item')
-        align_dict = {item["source"]["chromosome"]: item
+        align_dict = {item["source"]["chromosome"]:
+                      (item["source"]["start"],
+                       item["length"],
+                       item["target"]["start"],
+                       item["target"]["chromosome"])
                       for item in alignments}
         with open(coordinate_file_path, 'r') as coordfile:
             coords = ijson.items(coordfile, 'item')
