@@ -9,7 +9,7 @@ Grapper
 .. image:: https://coveralls.io/repos/github/strets123/grapper/badge.svg?branch=master 
         :target: https://coveralls.io/github/strets123/grapper?branch=master
 
-A simple reference genome re-mapper performing a simplified version of what tools such as `LiftOver <http://genome.ucsc.edu/cgi-bin/hgLiftOver>` do.
+A simple reference genome re-mapper performing a simplified version of what tools such as `LiftOver <http://genome.ucsc.edu/cgi-bin/hgLiftOver>`_ do.
 
 
 Features
