@@ -4,7 +4,7 @@ import ijson
 import multiprocessing
 import json
 from os import linesep
-
+from bisect import bisect_left
 
 STOP_TOKEN = "STOP!!!"
 
@@ -29,17 +29,25 @@ def file_writer(dest_filename, some_queue, some_stop_token):
             dest_file.write(line)
 
 
-def remap_genome_coordinate(coord, align_dict):
-    """Given a dictionary of chromosome alignment remappings,
+def remap_genome_coordinate(coord, align_tuples, startpoints):
+    """Given a tuple of chromosome alignment remappings,
     remap a single coordinate"""
     original_chromosome = coord["chromosome"]
-    chromosome_mapping = align_dict.get(original_chromosome, None)
-    if chromosome_mapping is not None:
-        (source_start_point, 
-         length, 
-         new_start_point, 
-         new_chromosome) = chromosome_mapping
+    # The bisect left function gives the nearest item in the array
+    # If the items are equal, in this case we want them to be part of
+    # The same mapping so we add 1
+    ind = bisect_left(startpoints, (coord["position"] + 1)) -1
+    if ind == -1:
+        #The coordinate is before the first chromosome
+        return None
+    chromosome_mapping = align_tuples[ind]
+    (source_start_point,
+     source_chromosome,
+     length, 
+     new_start_point, 
+     new_chromosome) = chromosome_mapping
 
+    if original_chromosome == source_chromosome:
         bases_from_start = coord["position"] - source_start_point
         within_range = bases_from_start <= length
         if bases_from_start >= 0 and within_range:
@@ -59,16 +67,18 @@ def remap_reference_genome(alignment_file_path,
     the source genome coordinates to a new reference genome"""
     with open(alignment_file_path, 'r') as align:
         alignments = ijson.items(align, 'item')
-        align_dict = {item["source"]["chromosome"]:
-                      (item["source"]["start"],
+        align_tuples = [(item["source"]["start"],
+                       item["source"]["chromosome"],
                        item["length"],
                        item["target"]["start"],
                        item["target"]["chromosome"])
-                      for item in alignments}
+                      for item in alignments]
+        align_tuples.sort(key=lambda tup: tup[0])
+        startpoints = [tup[0] for tup in align_tuples]
         with open(coordinate_file_path, 'r') as coordfile:
             coords = ijson.items(coordfile, 'item')
             for index, coord in enumerate(coords):
-                data_dict = remap_genome_coordinate(coord, align_dict)
+                data_dict = remap_genome_coordinate(coord, align_tuples, startpoints)
                 if data_dict is not None:
                     writer_queue.put(json.dumps(data_dict))
 

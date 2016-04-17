@@ -55,11 +55,11 @@ class TestGrapper(unittest.TestCase):
         When I call remap_genome_coordinates
         Then I gent back the new coordinate"""
         coordinate = {"chromosome": "1", "position": 150, "reference": "A"}
-        align_dict = {
-            "1":(100,100,300,"2"),
-            "2":(300,200,20,"7")  
-        }
-        new_mapping = grapper.remap_genome_coordinate(coordinate, align_dict)
+        align_tuples = [
+            (100,"1",100,300,"2"),
+            (300,"2",200,20,"7")  
+        ]
+        new_mapping = grapper.remap_genome_coordinate(coordinate, align_tuples, [tup[0] for tup in align_tuples])
         self.assertEqual(
             new_mapping, {
                 "chromosome": "2", "position": 350, "reference": "A"})
@@ -70,18 +70,18 @@ class TestGrapper(unittest.TestCase):
         When I call remap_genome_coordinates
         Then I gent back None"""
         coordinate = {"chromosome": "1", "position": 35, "reference": "A"}
-        align_dict = {
-            "1":(100,100,300,"2"),
-            "2":(300,200,20,"7")
-        }
-        new_mapping = grapper.remap_genome_coordinate(coordinate, align_dict)
+        align_tuples = [
+            (100,"1",100,300,"2"),
+            (300,"2",200,20,"7")  
+        ]
+        new_mapping = grapper.remap_genome_coordinate(coordinate, align_tuples, [tup[0] for tup in align_tuples])
         self.assertEqual(new_mapping, None)
         coordinate = {"chromosome": "1", "position": 201, "reference": "A"}
-        align_dict = {
-            "1":(100,100,300,"2"),
-            "2":(300,200,20,"7")
-        }
-        new_mapping = grapper.remap_genome_coordinate(coordinate, align_dict)
+        align_tuples = [
+            (100,"1",100,300,"2"),
+            (300,"2",200,20,"7")  
+        ]
+        new_mapping = grapper.remap_genome_coordinate(coordinate, align_tuples, [tup[0] for tup in align_tuples])
         self.assertEqual(new_mapping, None)
 
     def test_chromosome_not_mapped(self):
@@ -91,12 +91,54 @@ class TestGrapper(unittest.TestCase):
         Then I gent back None"""
 
         coordinate = {"chromosome": "12", "position": 150, "reference": "A"}
-        align_dict = {
-            "1":(100,100,300, "2"),
-            "2":(300,200,20, "7")
-        }
-        new_mapping = grapper.remap_genome_coordinate(coordinate, align_dict)
+        align_tuples = [
+            (100,"1",100,300,"2"),
+            (300,"2",200,20,"7")  
+        ]
+        new_mapping = grapper.remap_genome_coordinate(coordinate, align_tuples, [tup[0] for tup in align_tuples])
         self.assertEqual(new_mapping, None)
+
+
+    def test_two_alignments_from_same_chromosome(self):
+        """Given 2 different fragments are in 
+        the alignment file tests/test_data/alignment2x.json 
+        from the same chromosome
+        and 2 different fragments are also in the
+        coordinates file tests/test_data/source_coordinates2x.json
+        from the same chromosome
+        When I run the program
+
+        Then I expect the JSON output file to contain target coordinates:
+
+        [{ "chromosome": "2", "position": 350, "reference": "A" },
+
+         { "chromosome": "7", "position": 20, "reference": "C" }
+
+        ]
+        """
+
+        try:
+            os.remove(OUTPUT_FILE)
+        except OSError:
+            pass
+        alignfile = "tests/test_data/alignment2x.json"
+        coordsfile = "tests/test_data/source_coordinates2x.json"
+
+        grapper.handle_command(alignfile, coordsfile, OUTPUT_FILE)
+        # Wait for file to be fully flushed to the disk
+        with open(OUTPUT_FILE, 'r') as output:
+            target_coords = json.load(output)
+            dict_list = [coord for coord in target_coords]
+            self.assertEqual(dict_list, [{"chromosome": "2",
+                                          "position": 350,
+                                          "reference": "A"},
+                                         {"chromosome": "7",
+                                          "position": 20,
+                                          "reference": "C"}])
+
+        os.remove(OUTPUT_FILE)
+
+
 
     def test_handle_command(self):
         """Given the JSON alignment file

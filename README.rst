@@ -86,15 +86,17 @@ JSON content is written line by line using a separate process, with communicatio
 
 Tests have been added to demonstrate the functionality and specifically to show that chomosomes which have no mapping are ignored, as are chomosomes where the coordinate given is invalid for the length of the chomosome.
 
+Given that the only explicitely permitted assumption was that genome fragments do not overlap, I have assumed that chromosomes can be split into multiple fragments and tested for this case.
 
-Future Work
+
+Discussion
 -----------
 
-A further improvement can be envisioned whereby the reading of the file is done in multiple processes too. This could be done by reading alternate JSON objects in different subprocesses. 
+A further improvement can be envisioned whereby the reading of the file is done in multiple processes too. This could be done by splitting up the chromosomes between different procesesses
 
-Furthermore, we currently work with the whole of the required data from the alignment file in memory. Clearly if the alignment file is truly as big as the coordinates file this is not going to work. In order to reduce memory use, a dictionary of tuples has been used.
+Furthermore, we currently work with the whole of the required data from the alignment file in memory. Memory consumption has been reduced slightly by using a list of tuples rather than dictionaries. Clearly if the alignment file is truly as big as the coordinates file a different approach may be needed.
 
-If both of the files were very large they could be ordered by a mergesort algorithm and then processed side by side, again by an algorithm similar to mergesort.
+Currently we use a bisect_left function to find the nearest start point in the alignment file to the positions in the coordinate file. It might be possible instead to use a mergesort where both datasets are held in memory and are read side by side.
 
 Errors
 ------
