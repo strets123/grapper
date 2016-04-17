@@ -1,0 +1,7 @@
+[{ "length": 100, "source": { "chromosome": "1", "start": 100 }, "target": { "chromosome": "2", "start": 
+
+300 } },{ "length": 200, "source": { "chromosome": "2", "start": 300 }, "target": { "chromosome": "7", "start": 
+
+20 } }
+
+]
