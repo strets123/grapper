@@ -49,7 +49,8 @@ def remap_genome_coordinate(coord, align_tuples, startpoints):
 
     if original_chromosome == source_chromosome:
         bases_from_start = coord["position"] - source_start_point
-        within_range = bases_from_start <= length
+        # length of chromosome counts from 0 to (length -1)
+        within_range = bases_from_start < length
         if bases_from_start >= 0 and within_range:
             # The base from the coordinate is within range
             coord["chromosome"] = new_chromosome
