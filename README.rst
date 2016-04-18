@@ -15,7 +15,7 @@ A reference genome re-mapper performing a simplified version of what tools such 
 Features
 --------
 
-* Given a file with a JSON list of chomosome alignments and a second file with coordinates for remapping, convert the format of the input coordinates so they map to the target genome.
+* Given a file with a JSON list of chromosome alignments and a second file with coordinates for remapping, convert the format of the input coordinates so they map to the target genome.
 
 
 How to install in a virtualenv
@@ -84,15 +84,15 @@ In order to do this the ijson library was used for reading the content from the 
 
 JSON content is written line by line using a separate process, with communication happening via a multiprocessing queue.
 
-Tests have been added to demonstrate the functionality and specifically to show that chomosomes which have no mapping are ignored, as are chomosomes where the coordinate given is invalid for the length of the chomosome.
+Tests have been added to demonstrate the functionality and specifically to show that chromosomes which have no mapping are ignored, as are chromosomes where the coordinate given is invalid for the length of the chromosome.
 
-Given that the only explicitely permitted assumption was that genome fragments do not overlap, I have assumed that chromosomes can be split into multiple fragments and tested for this case.
+Given that the only explicitly permitted assumption was that genome fragments do not overlap, I have assumed that chromosomes can be split into multiple fragments and tested for this case.
 
 
 Discussion
 -----------
 
-A further improvement can be envisioned whereby the reading of the file is done in multiple processes too. This could be done by splitting up the chromosomes between different procesesses
+A further improvement can be envisioned whereby the reading of the file is done in multiple processes too. This could be done by splitting up the chromosomes between different processes.
 
 Furthermore, we currently work with the whole of the required data from the alignment file in memory. Memory consumption has been reduced slightly by using a list of tuples rather than dictionaries. Clearly if the alignment file is truly as big as the coordinates file a different approach may be needed.
 
